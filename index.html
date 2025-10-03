@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Gri-Gri IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+    <script src="app.js" defer></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 flex justify-center py-12 p-4 md:p-8 relative overflow-hidden font-sans text-white">
+    <div class="absolute inset-0">
+        <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px]"></div>
+    </div>
+    <div class="relative w-full max-w-7xl">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 backdrop-blur-xl border border-blue-500/20 rounded-full mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 3v4"/><path d="M3 19h4"/><path d="M17 19h4"/></svg>
+                <span class="text-blue-300 text-sm font-medium">Génération 3D par IA</span>
+            </div>
+            <h1 class="text-6xl md:text-7xl font-bold text-white mb-4 tracking-tight">Créez votre Gri-Gri</h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">Transformez n'importe quelle idée en un modèle 3D unique</p>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17 16h2"/><path d="m3 21 9-9"/><path d="M3.5 8.5 4 9"/><path d="M18 21h3v-3"/><path d="M12 21v-3l-9-9V3h3l9 9h3Z"/></svg></div>
+                        <div class="flex-1"><h2 class="text-2xl font-bold text-white mb-2">Décrivez votre idée</h2><p class="text-sm text-slate-400">Plus vous êtes précis, meilleur sera le résultat</p></div>
+                    </div>
+                    <textarea id="prompt-input" class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none text-base" placeholder="Exemple : Un dragon miniature avec des ailes translucides..." rows="6"></textarea>
+                    <div class="mt-4"><p class="text-xs text-slate-500 mb-3">Exemples rapides :</p><div id="example-prompts" class="flex flex-wrap gap-2"><button class="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-slate-300 transition-all">Un robot chat mignon</button><button class="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-slate-300 transition-all">Une potion magique dorée</button><button class="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-slate-300 transition-all">Un casque VR futuriste</button></div></div>
+                    <button id="generate-btn" class="w-full mt-6 py-4 px-6 rounded-2xl font-semibold text-base transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02]"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 3v4"/><path d="M3 19h4"/><path d="M17 19h4"/></svg><span>Générer mon Gri-Gri</span></button>
+                    <div id="status-box" class="hidden mt-4 p-4 rounded-xl border backdrop-blur-xl flex items-start gap-3"><div id="status-icon"></div><p id="status-text" class="text-sm"></p></div>
+                </div>
+            </div>
+            <div>
+                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6"><h2 class="text-2xl font-bold text-white">Aperçu 3D</h2><div class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full"><div id="status-indicator" class="w-2 h-2 rounded-full bg-slate-500"></div><span id="status-label" class="text-xs text-slate-400 font-medium">En attente</span></div></div>
+                    <div id="viewer-container" class="flex-1 relative bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl overflow-hidden border border-white/10 min-h-[400px]">
+                        <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-8">
+                           <div class="w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-3xl flex items-center justify-center mb-6 border border-white/10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-white/30"><path d="m21.12 6.4-6.05-4.06a2 2 0 0 0-2.17 0L6.83 6.4a2 2 0 0 0-1.03 1.76V16c0 .42.12.83.34 1.18l6.05 4.06a2 2 0 0 0 2.17 0l6.05-4.06a2 2 0 0 0 .34-1.18V8.16a2 2 0 0 0-1.03-1.76Z"/><path d="m6.58 6.58 10.84 7.23"/><path d="M12 22.08V12"/><path d="M17.42 6.58 6.58 13.8"/></svg>
+                            </div>
+                            <p class="text-slate-400 text-center">Votre modèle 3D apparaîtra ici</p><p class="text-slate-500 text-sm text-center mt-2">Commencez par décrire votre idée</p>
+                        </div>
+                    </div>
+                    <div id="success-box" class="hidden mt-6 p-5 bg-green-500/10 backdrop-blur-xl border border-green-500/30 rounded-2xl"><div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 flex-shrink-0 mt-0.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div><p class="text-green-400 font-semibold mb-1">Modèle généré avec succès !</p><p class="text-green-300/70 text-sm">Utilisez votre souris pour faire pivoter et zoomer.</p></div></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-12"><p class="text-slate-500 text-sm">Projet FabLab 2025 • Hugging Face + GitHub Pages</p></div>
+    </div>
+</body>
+</html>
